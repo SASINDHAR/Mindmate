@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #eef2f3;
+      background: #f0f4f8;
       padding: 2em;
       max-width: 600px;
       margin: auto;
@@ -14,15 +14,13 @@
     #chat {
       background: white;
       padding: 1em;
+      border-radius: 10px;
       height: 300px;
       overflow-y: auto;
-      border-radius: 10px;
-      border: 1px solid #ccc;
       margin-bottom: 1em;
+      border: 1px solid #ccc;
     }
-    .user, .ai {
-      margin: 0.5em 0;
-    }
+    .user, .ai { margin: 0.5em 0; }
     input[type="text"] {
       width: 75%;
       padding: 10px;
@@ -37,12 +35,15 @@
   </style>
 </head>
 <body>
-  <h2>🧠 MindMate – Your AI Therapist</h2>
+  <h2>🧠 MindMate – AI Therapist</h2>
   <div id="chat"></div>
   <input type="text" id="userInput" placeholder="Type how you feel..." />
   <button onclick="respond()">Send</button>
 
+  <!-- Load Sentimood -->
   <script src="https://unpkg.com/sentimood"></script>
+
+  <!-- Custom Script -->
   <script>
     const chat = document.getElementById('chat');
     const input = document.getElementById('userInput');
