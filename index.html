@@ -1,38 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>MindMate – AI Therapist</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f4f8;
-      padding: 2em;
-      max-width: 600px;
-      margin: auto;
-    }
-    #chat {
-      background: white;
-      padding: 1em;
-      border-radius: 10px;
-      height: 300px;
-      overflow-y: auto;
-      margin-bottom: 1em;
-      border: 1px solid #ccc;
-    }
-    .user, .ai { margin: 0.5em 0; }
-    input[type="text"] {
-      width: 75%;
-      padding: 10px;
-    }
-    button {
-      padding: 10px 15px;
-      background: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-  </style>
 </head>
 <body>
   <h2>🧠 MindMate – AI Therapist</h2>
@@ -40,14 +10,14 @@
   <input type="text" id="userInput" placeholder="Type how you feel..." />
   <button onclick="respond()">Send</button>
 
-  <!-- Load Sentimood -->
+  <!-- ✅ LOAD SENTIMOOD FIRST -->
   <script src="https://unpkg.com/sentimood"></script>
 
-  <!-- Custom Script -->
+  <!-- ✅ THEN YOUR SCRIPT -->
   <script>
     const chat = document.getElementById('chat');
     const input = document.getElementById('userInput');
-    const sentiment = new Sentimood();
+    const sentiment = new Sentimood(); // ✅ Now this works!
 
     function addMessage(text, sender) {
       const div = document.createElement('div');
@@ -55,12 +25,6 @@
       div.innerHTML = `<strong>${sender === 'user' ? 'You' : 'MindMate'}:</strong> ${text}`;
       chat.appendChild(div);
       chat.scrollTop = chat.scrollHeight;
-    }
-
-    function speak(text) {
-      const synth = window.speechSynthesis;
-      const utter = new SpeechSynthesisUtterance(text);
-      synth.speak(utter);
     }
 
     function respond() {
@@ -72,7 +36,7 @@
 
       const score = sentiment.analyze(text).score;
 
-      let reply = "I'm here with you.";
+      let reply = '';
       if (score < -3) {
         reply = "I'm really sorry you're feeling this way. I'm here to listen.";
       } else if (score < 0) {
@@ -86,7 +50,6 @@
       }
 
       addMessage(reply, 'ai');
-      speak(reply);
     }
   </script>
 </body>
