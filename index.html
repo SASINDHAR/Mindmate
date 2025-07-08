@@ -71,10 +71,10 @@
   <input type="text" id="userInput" placeholder="How are you feeling?" />
   <button id="sendBtn">Send</button>
 
-  <!-- ✅ Load Sentimood first -->
-  <script src="https://unpkg.com/sentimood"></script>
+  <!-- ✅ Use stable CDN version of Sentimood -->
+  <script src="https://cdn.jsdelivr.net/npm/sentimood@1.0.6/lib/sentimood.min.js"></script>
 
-  <!-- ✅ Then the custom script -->
+  <!-- ✅ Custom script AFTER Sentimood is loaded -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const chat = document.getElementById('chat');
