@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MindMate – AI Therapist</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f3;
+      padding: 2em;
+      max-width: 600px;
+      margin: auto;
+    }
+    #chat {
+      background: white;
+      padding: 1em;
+      height: 300px;
+      overflow-y: auto;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 1em;
+    }
+    .user, .ai {
+      margin: 0.5em 0;
+    }
+    input[type="text"] {
+      width: 75%;
+      padding: 10px;
+    }
+    button {
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>🧠 MindMate – Your AI Therapist</h2>
+  <div id="chat"></div>
+  <input type="text" id="userInput" placeholder="Type how you feel..." />
+  <button onclick="respond()">Send</button>
+
+  <script src="https://unpkg.com/sentimood"></script>
+  <script>
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('userInput');
+    const sentiment = new Sentimood();
+
+    function addMessage(text, sender) {
+      const div = document.createElement('div');
+      div.className = sender;
+      div.innerHTML = `<strong>${sender === 'user' ? 'You' : 'MindMate'}:</strong> ${text}`;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function speak(text) {
+      const synth = window.speechSynthesis;
+      const utter = new SpeechSynthesisUtterance(text);
+      synth.speak(utter);
+    }
+
+    function respond() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage(text, 'user');
+      input.value = '';
+
+      const score = sentiment.analyze(text).score;
+
+      let reply = "I'm here with you.";
+      if (score < -3) {
+        reply = "I'm really sorry you're feeling this way. I'm here to listen.";
+      } else if (score < 0) {
+        reply = "That sounds difficult. Want to talk more about it?";
+      } else if (score === 0) {
+        reply = "Thanks for sharing. Would you like a calming prompt?";
+      } else if (score < 3) {
+        reply = "Good to hear that. Let’s explore what’s helping.";
+      } else {
+        reply = "That's great! Let's celebrate that joy together.";
+      }
+
+      addMessage(reply, 'ai');
+      speak(reply);
+    }
+  </script>
+</body>
+</html>
