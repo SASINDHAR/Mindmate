@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MindMate – AI Therapist</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    #chat {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+    }
+
+    .user, .ai {
+      margin: 10px 0;
+    }
+
+    .user {
+      background-color: #cce5ff;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .ai {
+      background-color: #f8d7da;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    input[type="text"] {
+      width: 70%;
+      padding: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>🧠 MindMate – AI Therapist</h2>
+  <div id="chat"></div>
+  <input type="text" id="userInput" placeholder="Tell me how you feel..." />
+  <button id="sendBtn">Send</button>
+
+  <!-- ✅ Correct Sentimood script -->
+  <script src="https://cdn.jsdelivr.net/npm/sentimood@1.0.6/lib/sentimood.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof Sentimood === 'undefined') {
+        alert('Sentimood failed to load.');
+        return;
+      }
+
+      const sentiment = new Sentimood();
+      const chat = document.getElementById('chat');
+      const input = document.getElementById('userInput');
+      const sendBtn = document.getElementById('sendBtn');
+
+      function addMessage(text, type) {
+        const div = document.createElement('div');
+        div.className = type;
+        div.textContent = (type === 'user' ? 'You: ' : 'MindMate: ') + text;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      function speak(text) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        speechSynthesis.speak(utterance);
