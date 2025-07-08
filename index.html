@@ -3,54 +3,133 @@
 <head>
   <meta charset="UTF-8" />
   <title>MindMate – AI Therapist</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      padding: 2em;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h2 {
+      color: #007bff;
+      text-align: center;
+    }
+
+    #chat {
+      background: white;
+      padding: 1em;
+      border-radius: 10px;
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 1em;
+      border: 1px solid #ccc;
+    }
+
+    .user, .ai {
+      margin: 0.5em 0;
+      padding: 0.5em;
+      border-radius: 5px;
+    }
+
+    .user {
+      background-color: #d0ebff;
+    }
+
+    .ai {
+      background-color: #fde2e4;
+    }
+
+    input[type="text"] {
+      width: 70%;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 1em;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
   <h2>🧠 MindMate – AI Therapist</h2>
   <div id="chat"></div>
-  <input type="text" id="userInput" placeholder="Type how you feel..." />
-  <button onclick="respond()">Send</button>
+  <input type="text" id="userInput" placeholder="How are you feeling?" />
+  <button id="sendBtn">Send</button>
 
-  <!-- ✅ LOAD SENTIMOOD FIRST -->
+  <!-- ✅ Load Sentimood first -->
   <script src="https://unpkg.com/sentimood"></script>
 
-  <!-- ✅ THEN YOUR SCRIPT -->
+  <!-- ✅ Then the custom script -->
   <script>
-    const chat = document.getElementById('chat');
-    const input = document.getElementById('userInput');
-    const sentiment = new Sentimood(); // ✅ Now this works!
+    document.addEventListener('DOMContentLoaded', () => {
+      const chat = document.getElementById('chat');
+      const input = document.getElementById('userInput');
+      const sendBtn = document.getElementById('sendBtn');
+      const sentiment = new Sentimood();
 
-    function addMessage(text, sender) {
-      const div = document.createElement('div');
-      div.className = sender;
-      div.innerHTML = `<strong>${sender === 'user' ? 'You' : 'MindMate'}:</strong> ${text}`;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    function respond() {
-      const text = input.value.trim();
-      if (!text) return;
-
-      addMessage(text, 'user');
-      input.value = '';
-
-      const score = sentiment.analyze(text).score;
-
-      let reply = '';
-      if (score < -3) {
-        reply = "I'm really sorry you're feeling this way. I'm here to listen.";
-      } else if (score < 0) {
-        reply = "That sounds difficult. Want to talk more about it?";
-      } else if (score === 0) {
-        reply = "Thanks for sharing. Would you like a calming prompt?";
-      } else if (score < 3) {
-        reply = "Good to hear that. Let’s explore what’s helping.";
-      } else {
-        reply = "That's great! Let's celebrate that joy together.";
+      function addMessage(text, sender) {
+        const div = document.createElement('div');
+        div.className = sender;
+        div.innerHTML = `<strong>${sender === 'user' ? 'You' : 'MindMate'}:</strong> ${text}`;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
       }
 
-      addMessage(reply, 'ai');
-    }
+      function speak(text) {
+        const synth = window.speechSynthesis;
+        const utter = new SpeechSynthesisUtterance(text);
+        synth.speak(utter);
+      }
+
+      function respond() {
+        const userText = input.value.trim();
+        if (!userText) return;
+
+        addMessage(userText, 'user');
+        input.value = '';
+
+        const score = sentiment.analyze(userText).score;
+
+        let reply = '';
+        if (score < -3) {
+          reply = "I'm really sorry you're feeling this way. I'm here for you. Would you like to write about what's going on?";
+        } else if (score < 0) {
+          reply = "That sounds tough. Let's take a deep breath together. Want a calming journaling prompt?";
+        } else if (score === 0) {
+          reply = "Hmm, I hear you. Would you like to explore your thoughts through a guided prompt?";
+        } else if (score > 0 && score < 3) {
+          reply = "Glad you're feeling okay. Would you like to reflect on what helped you today?";
+        } else {
+          reply = "That's wonderful! Want to note down what made you feel this happy?";
+        }
+
+        addMessage(reply, 'ai');
+        speak(reply);
+      }
+
+      sendBtn.addEventListener('click', respond);
+
+      input.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          respond();
+        }
+      });
+    });
   </script>
 </body>
 </html>
